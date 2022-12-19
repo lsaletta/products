@@ -1,0 +1,14 @@
+[
+  {
+    "id": 21,
+    "productId": 1,
+    "backSoon": true,
+    "special": false
+  },
+  {
+    "id": 22,
+    "productId": 1,
+    "backSoon": false,
+    "special": true
+  }
+]
