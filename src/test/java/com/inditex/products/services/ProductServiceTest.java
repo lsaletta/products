@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -58,8 +57,7 @@ public class ProductServiceTest extends BaseTest {
 
         Assertions.assertEquals(0, products.size());
 
-        verify(productRepository, times(1))
-                .findAll();
+        verify(productRepository, times(1)).findAll();
     }
 
     @Test
@@ -69,23 +67,17 @@ public class ProductServiceTest extends BaseTest {
         sizeEntities = getFileFromListResources("jsons/sizes_test1.json", SizeEntity.class);
         stockEntities = getFileFromListResources("jsons/stocks_test1.json", StockEntity.class);
 
-        Mockito.when(productRepository.findAll())
-                .thenReturn(productEntities);
-        Mockito.when(sizeRepository.findByProductId(anyInt()))
-                .thenReturn(sizeEntities);
-        Mockito.when(stockRepository.findById(anyInt()))
-                .thenReturn(stockEntities.stream().findFirst());
+        Mockito.when(productRepository.findAll()).thenReturn(productEntities);
+        Mockito.when(sizeRepository.findByProductId(anyInt())).thenReturn(sizeEntities);
+        Mockito.when(stockRepository.findById(anyInt())).thenReturn(stockEntities.stream().findFirst());
         List<Product> products = productService.availableProducts();
 
         Assertions.assertNotNull(products);
         Assertions.assertEquals(products.get(0).getId(), productEntities.get(0).getId());
 
-        verify(productRepository, times(1))
-                .findAll();
-        verify(sizeRepository, times(1))
-                .findByProductId(anyInt());
-        verify(stockRepository, times(2))
-                .findById(anyInt());
+        verify(productRepository, times(1)).findAll();
+        verify(sizeRepository, times(1)).findByProductId(anyInt());
+        verify(stockRepository, times(1)).findById(anyInt());
     }
 
     @Test
@@ -95,15 +87,9 @@ public class ProductServiceTest extends BaseTest {
         sizeEntities = getFileFromListResources("jsons/sizes_test2.json", SizeEntity.class);
         stockEntities = getFileFromListResources("jsons/stocks_test2.json", StockEntity.class);
 
-        Mockito.when(productRepository.findAll())
-                .thenReturn(productEntities);
-        Mockito.when(sizeRepository.findByProductId(anyInt()))
-                .thenReturn(sizeEntities);
-        Mockito.when(sizeRepository.existsBySpecialAndProductId(anyBoolean(), anyInt()))
-                .thenReturn(true);
-
-        Mockito.when(stockRepository.findById(anyInt()))
-                .thenReturn(Optional.of(stockEntities.get(0)), Optional.of(stockEntities.get(1)));
+        Mockito.when(productRepository.findAll()).thenReturn(productEntities);
+        Mockito.when(sizeRepository.findByProductId(anyInt())).thenReturn(sizeEntities);
+        Mockito.when(sizeRepository.existsBySpecialAndProductId(anyBoolean(), anyInt())).thenReturn(true);
 
         List<Product> products = productService.availableProducts();
         Assertions.assertNotNull(products);
@@ -112,18 +98,14 @@ public class ProductServiceTest extends BaseTest {
     }
 
     @Test
-    void givenRepositoryOutputEmptyProducts_whenAvailableProducts_thenThrowException() throws IOException {
+    void givenRepositoryOutputEmptyProducts_whenAvailableProducts_thenThrowException() {
 
-        Mockito.when(productRepository.findAll())
-                .thenThrow(new RuntimeException());
+        Mockito.when(productRepository.findAll()).thenThrow(new RuntimeException());
 
-        InditexException exception = Assertions.assertThrows(InditexException.class, () ->
-                productService.availableProducts()
-        );
+        InditexException exception = Assertions.assertThrows(InditexException.class, () -> productService.availableProducts());
 
         Assertions.assertEquals(exception.getErrorDescription(), "Error obtaining products");
-        verify(productRepository, times(1))
-                .findAll();
+        verify(productRepository, times(1)).findAll();
     }
 
 
