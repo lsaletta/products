@@ -48,8 +48,8 @@ public class ProductControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(response.getBody().get(0).getId(), 5);
-        assertEquals(response.getBody().get(0).getId(), 1);
-        assertEquals(response.getBody().get(0).getId(), 3);
+        assertEquals(response.getBody().get(1).getId(), 1);
+        assertEquals(response.getBody().get(2).getId(), 3);
     }
 
 }
